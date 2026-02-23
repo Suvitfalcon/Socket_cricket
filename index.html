@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hand Cricket - Player vs Opponent</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <h1>🏏 Hand Cricket Game</h1>
+        <p class="game-subtitle">.</p>
+
+        <!-- Start Screen -->
+        <div id="start-screen">
+            <!-- Profile Section - NO SPELLCHECK -->
+            <div id="profile-section">
+                <h3>Player Profile</h3>
+                <div class="profile-container">
+                    <div class="profile-avatar">
+                        <div id="avatar-display" class="avatar-circle">
+                            <span id="avatar-initials">P</span>
+                            <img id="avatar-image" class="hidden" alt="Player Avatar">
+                        </div>
+                        <div class="avatar-actions">
+                            <input type="file" id="avatar-upload" accept="image/*" class="hidden">
+                            <button id="upload-avatar-btn" class="avatar-btn">Upload Avatar</button>
+                            <button id="remove-avatar-btn" class="avatar-btn remove-btn hidden">Remove</button>
+                        </div>
+                    </div>
+                    <div class="profile-form">
+                        <div class="form-group">
+                            <label for="player-name">Player Name:</label>
+                            <input 
+                                type="text" 
+                                id="player-name" 
+                                placeholder="Enter your name" 
+                                maxlength="20"
+                                autocorrect="off"
+                                autocapitalize="off"
+                                autocomplete="off"
+                            >
+                        </div>
+                        <div class="form-group">
+                            <label for="player-status">Status:</label>
+                            <select id="player-status">
+                                <option value="ready">Ready to Play</option>
+                                <option value="learning">Learning</option>
+                                <option value="expert">Expert Player</option>
+                                <option value="casual">Casual Player</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-stats">
+                    <div class="stat-box">
+                        <span class="stat-number" id="games-played">0</span>
+                        <span class="stat-label">Games Played</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number" id="games-won">0</span>
+                        <span class="stat-label">Games Won</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number" id="win-rate">0%</span>
+                        <span class="stat-label">Win Rate</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Settings -->
+            <div id="game-settings">
+                <h3>Game Settings</h3>
+                <div id="overs-chooser">
+                    <label for="overs">Select overs:</label>
+                    <select id="overs">
+                        <option value="1">1 over (6 balls)</option>
+                        <option value="2">2 overs (12 balls)</option>
+                        <option value="3">3 overs (18 balls)</option>
+                    </select>
+                </div>
+                <button id="connect-button">Connect to Play</button>
+                <p id="connection-status">Ready to connect. Enter your profile details above.</p>
+            </div>
+        </div>
+
+        <!-- Toss Screen -->
+        <div id="toss-screen" class="hidden">
+            <div class="player-info-bar">
+                <div class="player-display">
+                    <div id="toss-avatar-display" class="small-avatar">
+                        <span id="toss-avatar-initials">P</span>
+                        <img id="toss-avatar-image" class="hidden" alt="Player Avatar">
+                    </div>
+                    <span id="toss-player-name">Player</span>
+                </div>
+            </div>
+
+            <h2>Toss</h2>
+
+            <div id="toss-choose-side">
+                <p>Choose a side of the coin.</p>
+                <div class="coin-sides">
+                    <button id="choose-heads" class="coin-btn">Heads</button>
+                    <button id="choose-tails" class="coin-btn">Tails</button>
+                </div>
+                <p id="toss-side-status" class="hint"></p>
+            </div>
+
+            <div id="toss-flip" class="hidden">
+                <div class="coin" id="coin">
+                    <div class="face heads">Heads</div>
+                    <div class="face tails">Tails</div>
+                </div>
+                <p id="toss-flip-status" class="hint">Waiting to flip...</p>
+                <button id="flip-coin-btn">Flip Coin</button>
+            </div>
+
+            <div id="toss-winner-choose" class="hidden">
+                <p id="toss-winner-text"></p>
+                <div class="choose-role">
+                    <button id="choose-batting" class="primary">Choose Batting</button>
+                    <button id="choose-bowling" class="secondary">Choose Bowling</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="hidden">
+            <div class="player-info-bar">
+                <div class="player-display">
+                    <div id="game-avatar-display" class="small-avatar">
+                        <span id="game-avatar-initials">P</span>
+                        <img id="game-avatar-image" class="hidden" alt="Player Avatar">
+                    </div>
+                    <span id="game-player-name">Player</span>
+                </div>
+            </div>
+
+            <div id="info-area">
+                <p id="role-info"></p>
+                <p id="score-info">Score: 0/0</p>
+                <!-- Ball Indicators Only -->
+                <div id="balls-display">
+                    <p class="balls-title">Over Progress:</p>
+                    <div class="balls-container" id="balls-container">
+                        <!-- Ball indicators will be added here dynamically -->
+                    </div>
+                </div>
+                <p id="balls-info">Balls: 0 / 6</p>
+            </div>
+            <p id="game-status">Waiting for the toss...</p>
+            <div id="controls" class="hidden">
+                <p>Choose a number (0-6):</p>
+                <div class="buttons">
+                    <button class="choice-btn">0</button>
+                    <button class="choice-btn">1</button>
+                    <button class="choice-btn">2</button>
+                    <button class="choice-btn">3</button>
+                    <button class="choice-btn">4</button>
+                    <button class="choice-btn">5</button>
+                    <button class="choice-btn">6</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Match Result Screen -->
+        <div id="result-screen" class="hidden">
+            <div class="player-info-bar">
+                <div class="player-display">
+                    <div id="result-avatar-display" class="small-avatar">
+                        <span id="result-avatar-initials">P</span>
+                        <img id="result-avatar-image" class="hidden" alt="Player Avatar">
+                    </div>
+                    <span id="result-player-name">Player</span>
+                </div>
+            </div>
+
+            <!-- Match Header -->
+            <div id="match-header">
+                <h2 id="match-title">Match Result</h2>
+                <div id="match-format-info">
+                    <span id="match-format">T1 • 1 Over Match</span>
+                </div>
+            </div>
+            
+            <!-- Match Result Banner -->
+            <div id="match-result-banner">
+                <div id="result-icon">🏏</div>
+                <div id="winner-announcement">Match Complete!</div>
+                <div id="match-margin">Result pending...</div>
+            </div>
+            
+            <!-- YOUR PERFORMANCE SECTION -->
+            <div id="your-performance-section" class="performance-section">
+                <div class="section-header">
+                    <span class="section-title">Your Performance</span>
+                    <span class="section-subtitle" id="your-name-display">You</span>
+                </div>
+                
+                <div class="performance-stats">
+                    <!-- Batting Stats -->
+                    <div class="stat-group batting-group">
+                        <div class="stat-header">
+                            <span class="stat-icon">🏏</span>
+                            <span class="stat-title">Batting</span>
+                        </div>
+                        <div class="stat-details">
+                            <div class="main-stat">
+                                <span class="runs-scored" id="your-runs">0</span>
+                                <span class="score-separator">/</span>
+                                <span class="balls-faced" id="your-balls">0</span>
+                            </div>
+                            <div class="sub-stats">
+                                <div class="sub-stat">
+                                    <span class="label">Strike Rate:</span>
+                                    <span class="value" id="your-strike-rate">0.00</span>
+                                </div>
+                                <div class="sub-stat">
+                                    <span class="label">Wickets Lost:</span>
+                                    <span class="value" id="your-wickets-lost">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Bowling Stats -->
+                    <div class="stat-group bowling-group">
+                        <div class="stat-header">
+                            <span class="stat-icon">⚾</span>
+                            <span class="stat-title">Bowling</span>
+                        </div>
+                        <div class="stat-details">
+                            <div class="main-stat">
+                                <span class="wickets-taken" id="your-wickets-taken">0</span>
+                                <span class="runs-conceded">/<span id="your-runs-conceded">0</span></span>
+                            </div>
+                            <div class="sub-stats">
+                                <div class="sub-stat">
+                                    <span class="label">Economy Rate:</span>
+                                    <span class="value" id="your-economy">0.00</span>
+                                </div>
+                                <div class="sub-stat">
+                                    <span class="label">Overs Bowled:</span>
+                                    <span class="value" id="your-overs-bowled">0.0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- VS DIVIDER -->
+            <div class="vs-divider-section">
+                <div class="vs-text">VS</div>
+                <div class="match-summary">
+                    <span id="match-outcome-text">Match Summary</span>
+                </div>
+            </div>
+            
+            <!-- OPPONENT PERFORMANCE SECTION -->
+            <div id="opponent-performance-section" class="performance-section">
+                <div class="section-header">
+                    <span class="section-title">Opponent Performance</span>
+                    <span class="section-subtitle" id="opponent-name-display">Opponent</span>
+                </div>
+                
+                <div class="performance-stats">
+                    <!-- Batting Stats -->
+                    <div class="stat-group batting-group">
+                        <div class="stat-header">
+                            <span class="stat-icon">🏏</span>
+                            <span class="stat-title">Batting</span>
+                        </div>
+                        <div class="stat-details">
+                            <div class="main-stat">
+                                <span class="runs-scored" id="opponent-runs">0</span>
+                                <span class="score-separator">/</span>
+                                <span class="balls-faced" id="opponent-balls">0</span>
+                            </div>
+                            <div class="sub-stats">
+                                <div class="sub-stat">
+                                    <span class="label">Strike Rate:</span>
+                                    <span class="value" id="opponent-strike-rate">0.00</span>
+                                </div>
+                                <div class="sub-stat">
+                                    <span class="label">Wickets Lost:</span>
+                                    <span class="value" id="opponent-wickets-lost">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Bowling Stats -->
+                    <div class="stat-group bowling-group">
+                        <div class="stat-header">
+                            <span class="stat-icon">⚾</span>
+                            <span class="stat-title">Bowling</span>
+                        </div>
+                        <div class="stat-details">
+                            <div class="main-stat">
+                                <span class="wickets-taken" id="opponent-wickets-taken">0</span>
+                                <span class="runs-conceded">/<span id="opponent-runs-conceded">0</span></span>
+                            </div>
+                            <div class="sub-stats">
+                                <div class="sub-stat">
+                                    <span class="label">Economy Rate:</span>
+                                    <span class="value" id="opponent-economy">0.00</span>
+                                </div>
+                                <div class="sub-stat">
+                                    <span class="label">Overs Bowled:</span>
+                                    <span class="value" id="opponent-overs-bowled">0.0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Match Highlights -->
+            <div id="match-highlights">
+                <div class="highlight-item">
+                    <span class="highlight-label">Player of the Match:</span>
+                    <span class="highlight-value" id="player-of-match">-</span>
+                </div>
+                <div class="highlight-item">
+                    <span class="highlight-label">Best Bowling Figures:</span>
+                    <span class="highlight-value" id="best-bowling-figures">-</span>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div id="result-actions">
+                <button id="play-again-button" class="primary-btn">
+                    <span class="btn-icon">🔄</span>
+                    Play Again
+                </button>
+                <button id="exit-button" class="exit-btn">
+                    <span class="btn-icon">🏠</span>
+                    Exit
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result Popup - WITH WICKETS TAKEN -->
+    <div id="personal-result-popup" class="celebration-overlay hidden">
+        <div class="celebration-container personal-result">
+            <div class="celebration-content">
+                <div class="celebration-icon" id="personal-result-icon">📊</div>
+                <h2 id="personal-result-heading">Match Complete!</h2>
+                <p id="personal-result-message">Your performance summary is ready.</p>
+                
+                <!-- Winner/Loser Summary Based on Score -->
+                <div id="match-outcome-summary" class="outcome-summary">
+                    <div class="outcome-text">
+                        <span id="winner-announcement">Match Result Loading...</span>
+                    </div>
+                    <div id="score-comparison" class="score-comparison">
+                        <div class="score-display">
+                            <span class="score-label">Your Score:</span>
+                            <span id="your-final-score" class="score-value">0</span>
+                        </div>
+                        <div class="vs-divider">VS</div>
+                        <div class="score-display">
+                            <span class="score-label">Opponent Score:</span>
+                            <span id="opponent-final-score" class="score-value">0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- UPDATED: Quick Stats with Separated Wickets -->
+                <div id="quick-stats">
+                    <div class="quick-stat">
+                        <span id="quick-runs">0</span>
+                        <label>Runs</label>
+                    </div>
+                    <div class="quick-stat">
+                        <span id="quick-balls">0</span>
+                        <label>Balls</label>
+                    </div>
+                    <!-- UPDATED: Special Wickets Section -->
+                    <div class="quick-stat wickets-stat">
+                        <span id="quick-wickets">0</span>
+                        <label>Wickets Taken</label>
+                    </div>
+                </div>
+                <button id="personal-result-ok" class="celebration-btn primary">View Detailed Results</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
